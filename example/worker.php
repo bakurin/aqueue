@@ -9,6 +9,7 @@ use Bakurin\AQueue\Example\QueueStub;
 use Bakurin\AQueue\Example\TheHandler;
 use Bakurin\AQueue\Example\TheMessage;
 use Bakurin\AQueue\JsonPayloadMarshaller;
+use Bakurin\AQueue\Message;
 use Bakurin\AQueue\Middleware\ErrorHandlerMiddleware;
 use Bakurin\AQueue\Middleware\ForkMiddleware;
 use Bakurin\AQueue\Middleware\LoggerMiddleware;
@@ -47,15 +48,16 @@ $container = new class ($pimpleContainer) implements \Psr\Container\ContainerInt
 };
 
 $queue = new QueueStub(new JsonPayloadMarshaller());
-$queue->push(json_encode(['jsonrpc' => '2.0', 'method' => 'amessage', 'params' => ['a' => 2, 'b' => 2]]));
-$queue->push(json_encode(['jsonrpc' => '2.0', 'method' => 'themessage', 'params' => ['a' => 2, 'b' => 1]]));
+$queue->push(new Message(['jsonrpc' => '2.0', 'method' => 'amessage', 'params' => ['a' => 2, 'b' => 2]]));
+$queue->push(new Message(['jsonrpc' => '2.0', 'method' => 'themessage', 'params' => ['a' => 2, 'b' => 1]]));
 
 $messageFactory = new JsonRpcMessageFactory(['amessage' => AMessage::class, 'themessage' => TheMessage::class]);
 $messageHandlerResolver = new MessageHandlerResolver($container);
-$logger = new class extends \Psr\Log\AbstractLogger {
+$logger = new class extends \Psr\Log\AbstractLogger
+{
     public function log($level, $message, array $context = [])
     {
-        echo strtoupper($level) . ': ' . $message . PHP_EOL; // . " -- context:" . var_export($context, true) . PHP_EOL;
+        echo strtoupper($level) . ': ' . $message . PHP_EOL;
     }
 };
 

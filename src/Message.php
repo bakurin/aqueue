@@ -9,13 +9,11 @@ final class Message
     private $ack;
     private $requeue;
 
-    public function __construct(array $payload, callable $ack = null, callable $requeue = null)
+    public function __construct($payload, $ack = null, $requeue = null)
     {
         $this->payload = $payload;
-        $this->ack = $ack ?: function () {
-        };
-        $this->requeue = $requeue ?: function () {
-        };
+        $this->ack = $ack;
+        $this->requeue = $requeue;
     }
 
     public function getPayload(): array
@@ -25,11 +23,15 @@ final class Message
 
     public function ack()
     {
-        call_user_func($this->ack);
+        if (is_callable($this->ack)) {
+            call_user_func($this->ack);
+        }
     }
 
     public function requeue(int $attemptsLimit = 1)
     {
-        call_user_func($this->requeue, $this, $attemptsLimit);
+        if (is_callable($this->requeue)) {
+            call_user_func($this->requeue, $this, $attemptsLimit);
+        }
     }
 }

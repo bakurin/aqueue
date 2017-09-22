@@ -18,7 +18,6 @@ final class LoggerMiddleware implements Middleware
     public function handle(Message $message, callable $next)
     {
         $start = microtime(true);
-        $this->logger->info("-----------------");
         $this->logger->info("start message processing", $message->getPayload());
         $next($message);
         $this->logger->info(sprintf('message has been processed in %.3f sec', microtime(true) - $start));
