@@ -14,7 +14,6 @@ use Bakurin\AQueue\Middleware\ForkMiddleware;
 use Bakurin\AQueue\Middleware\LoggerMiddleware;
 use Bakurin\AQueue\Middleware\MessageAckMiddleware;
 use Bakurin\AQueue\Worker;
-use Psr\Log\NullLogger;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -52,13 +51,18 @@ $queue->push(json_encode(['jsonrpc' => '2.0', 'method' => 'amessage', 'params' =
 $queue->push(json_encode(['jsonrpc' => '2.0', 'method' => 'themessage', 'params' => ['a' => 2, 'b' => 1]]));
 
 $messageFactory = new JsonRpcMessageFactory(['amessage' => AMessage::class, 'themessage' => TheMessage::class]);
-$logger = new NullLogger();
 $messageHandlerResolver = new MessageHandlerResolver($container);
+$logger = new class extends \Psr\Log\AbstractLogger {
+    public function log($level, $message, array $context = [])
+    {
+        echo strtoupper($level) . ': ' . $message . PHP_EOL; // . " -- context:" . var_export($context, true) . PHP_EOL;
+    }
+};
 
 $worker = new Worker($queue, $messageFactory, $messageHandlerResolver);
-$worker->appendMiddleware(new ErrorHandlerMiddleware(new NullLogger()));
-$worker->appendMiddleware(new LoggerMiddleware(new NullLogger()));
+$worker->appendMiddleware(new ErrorHandlerMiddleware($logger));
+$worker->appendMiddleware(new LoggerMiddleware($logger));
 $worker->appendMiddleware(new MessageAckMiddleware());
-$worker->appendMiddleware(new ForkMiddleware(new NullLogger()));
+$worker->appendMiddleware(new ForkMiddleware($logger));
 
 $worker->run();

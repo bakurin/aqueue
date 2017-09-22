@@ -18,9 +18,9 @@ final class QueueStub implements Queue
         $this->messages = [];
     }
 
-    public function push($message)
+    public function push(Message $message)
     {
-        $this->messages[] = $message;
+        $this->messages[] = $this->marshaller->serialize($message->getPayload());
     }
 
     public function consume(callable $callback)

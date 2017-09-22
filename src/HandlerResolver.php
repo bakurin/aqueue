@@ -6,5 +6,6 @@ namespace Bakurin\AQueue;
 interface HandlerResolver
 {
     public function canResolve($event): bool;
+
     public function resolve($event): callable;
 }

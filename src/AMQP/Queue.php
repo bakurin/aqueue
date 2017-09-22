@@ -37,13 +37,8 @@ final class Queue implements \Bakurin\AQueue\Queue
         $this->exchangeType = $exchangeType;
     }
 
-    public function push($message)
+    public function push(Message $message)
     {
-        // todo: add type casting after refactoring complete
-        if (!$message instanceof \Bakurin\AQueue\Message) {
-            throw new \InvalidArgumentException('Message must implement ' . \Bakurin\AQueue\Message::class);
-        }
-
         $body = $this->payloadMarshaller->serialize($message->getPayload());
         $this->queueMessage(new AMQPMessage($body));
     }

@@ -12,8 +12,10 @@ final class Message
     public function __construct(array $payload, callable $ack = null, callable $requeue = null)
     {
         $this->payload = $payload;
-        $this->ack = $ack ?: function () {};
-        $this->requeue = $requeue ?: function () {};
+        $this->ack = $ack ?: function () {
+        };
+        $this->requeue = $requeue ?: function () {
+        };
     }
 
     public function getPayload(): array
