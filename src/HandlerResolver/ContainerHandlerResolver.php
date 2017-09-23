@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Bakurin\AQueue\Example;
+namespace Bakurin\AQueue\HandlerResolver;
 
-use Bakurin\AQueue\HandlerResolver;
 use Psr\Container\ContainerInterface;
 
-final class MessageHandlerResolver implements HandlerResolver
+final class ContainerHandlerResolver implements HandlerResolver
 {
     private $container;
 

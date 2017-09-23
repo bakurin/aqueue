@@ -7,19 +7,12 @@ final class QueueConfig
 {
     private $exchangeName;
     private $exchangeType;
-    private $cacheChannel;
     private $options;
 
-    public function __construct(
-        string $queueName,
-        string $exchangeName = 'router',
-        string $exchangeType = 'direct',
-        bool $cashChannel = false,
-        array $options = []
-    ) {
+    public function __construct(string $exchangeName = 'router', string $exchangeType = 'direct', array $options = [])
+    {
         $this->exchangeName = $exchangeName;
         $this->exchangeType = $exchangeType;
-        $this->cacheChannel = $cashChannel;
         $this->options = $options;
     }
 
@@ -31,11 +24,6 @@ final class QueueConfig
     public function getExchangeType(): string
     {
         return $this->exchangeType;
-    }
-
-    public function cacheChannel(): bool
-    {
-        return $this->cacheChannel;
     }
 
     public function getOptions(): array

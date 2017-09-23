@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Bakurin\AQueue\AMQP;
 
 use Bakurin\AQueue\Message;
-use Bakurin\AQueue\PayloadMarshaller;
+use Bakurin\AQueue\PayloadMarshaller\PayloadMarshaller;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -40,6 +41,7 @@ final class Queue implements \Bakurin\AQueue\Queue
 
     public function consume(callable $callback, int $timeout = 0)
     {
+        $channel = $this->getChannel();
         $consume = function (AMQPMessage $msg) use ($callback) {
             $payload = $this->payloadMarshaller->deserialize($msg->getBody());
             $message = new Message(
@@ -51,7 +53,7 @@ final class Queue implements \Bakurin\AQueue\Queue
             $callback($message);
         };
 
-        $this->getChannel()->basic_consume(
+        $channel->basic_consume(
             $this->queueName,
             '',
             false,
@@ -61,8 +63,8 @@ final class Queue implements \Bakurin\AQueue\Queue
             $consume
         );
 
-        while (count($this->getChannel()->callbacks)) {
-            $this->getChannel()->wait(null, false, $timeout);
+        while (count($channel->callbacks)) {
+            $channel->wait(null, false, $timeout);
         }
     }
 
@@ -71,9 +73,9 @@ final class Queue implements \Bakurin\AQueue\Queue
         $this->getChannel()->basic_publish($message, $this->config->getExchangeName(), $this->queueName);
     }
 
-    private function getChannel()
+    private function getChannel(): AMQPChannel
     {
-        if (!$this->channel || !$this->config->cacheChannel()) {
+        if ($this->channel === null) {
             $channel = $this->connection->channel();
             $channel->queue_declare($this->queueName, false, true, false, false, false, $this->config->getOptions());
             $channel->exchange_declare($this->config->getExchangeName(), $this->config->getExchangeType(), false, true, false);

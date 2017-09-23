@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Bakurin\AQueue;
 
+use Bakurin\AQueue\HandlerResolver\HandlerResolver;
 use Bakurin\AQueue\Middleware\Middleware;
 
 final class Worker

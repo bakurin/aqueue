@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Bakurin\AQueue;
+namespace Bakurin\AQueue\PayloadMarshaller;
 
 interface PayloadMarshaller
 {

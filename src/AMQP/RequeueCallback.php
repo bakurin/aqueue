@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Bakurin\AQueue\AMQP;
 
 use Bakurin\AQueue\Message;
-use Bakurin\AQueue\PayloadMarshaller;
+use Bakurin\AQueue\PayloadMarshaller\PayloadMarshaller;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
 

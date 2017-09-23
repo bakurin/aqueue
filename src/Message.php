@@ -16,7 +16,7 @@ final class Message
         $this->requeue = $requeue;
     }
 
-    public function getPayload(): array
+    public function getPayload()
     {
         return $this->payload;
     }
