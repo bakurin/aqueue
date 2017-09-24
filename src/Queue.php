@@ -5,7 +5,7 @@ namespace Bakurin\AQueue;
 
 interface Queue
 {
-    public function push(Message $message);
+    public function push($messagePayload);
 
     public function consume(callable $callback);
 }

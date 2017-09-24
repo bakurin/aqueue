@@ -9,7 +9,6 @@ use Bakurin\AQueue\Example\MultiplyMessage;
 use Bakurin\AQueue\Example\SummHandler;
 use Bakurin\AQueue\Example\SummMessage;
 use Bakurin\AQueue\HandlerResolver\ContainerHandlerResolver;
-use Bakurin\AQueue\Message;
 use Bakurin\AQueue\Middleware\ErrorHandlerMiddleware;
 use Bakurin\AQueue\Middleware\ForkMiddleware;
 use Bakurin\AQueue\Middleware\LoggerMiddleware;
@@ -73,7 +72,7 @@ $worker->appendMiddleware(new LoggerMiddleware($logger));
 $worker->appendMiddleware(new MessageAckMiddleware());
 $worker->appendMiddleware(new ForkMiddleware($logger));
 
-$queue->push(new Message(new SummMessage(1, 3)));
-$queue->push(new Message(new MultiplyMessage(2, 5)));
+$queue->push(new SummMessage(1, 3));
+$queue->push(new MultiplyMessage(2, 5));
 
 $worker->run();

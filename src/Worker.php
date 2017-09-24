@@ -55,12 +55,12 @@ final class Worker
             $payload = $message->getPayload();
             $command = $this->messageFactory->create($payload);
             if ($command === null) {
-                throw new \InvalidArgumentException('Unknown message has been received from the queue');
+                throw new \InvalidArgumentException('unknown message has been received from the queue');
             }
 
             $commandType = get_class($command);
             if (!$this->handlerResolver->canResolve($commandType)) {
-                throw new \InvalidArgumentException("Handler for {$commandType} is not defined.");
+                throw new \InvalidArgumentException("handler for {$commandType} is not defined.");
             }
 
             $handler = $this->handlerResolver->resolve($commandType);

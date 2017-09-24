@@ -14,7 +14,7 @@ final class PhpObjectPayloadMarshaller implements PayloadMarshaller
         return serialize($payload);
     }
 
-    public function deserialize(string $body): array
+    public function deserialize(string $body)
     {
         return unserialize($body);
     }

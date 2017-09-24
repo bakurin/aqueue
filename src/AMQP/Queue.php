@@ -33,9 +33,9 @@ final class Queue implements \Bakurin\AQueue\Queue
         $this->config = $config;
     }
 
-    public function push(Message $message)
+    public function push($messagePayload)
     {
-        $body = $this->payloadMarshaller->serialize($message->getPayload());
+        $body = $this->payloadMarshaller->serialize($messagePayload);
         $this->queueMessage(new AMQPMessage($body));
     }
 
